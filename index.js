@@ -37,16 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    // Check for 'tasks' in localStorage, if absent, add
-    if (!localStorage.getItem('tasks')) localStorage.setItem('tasks', '[]');
-
-    // Fill tasks list with tasks in localStorage when page load
-    JSON.parse(localStorage.tasks).forEach(task => {
-        taskAdd(task, '.list', false);
-    });
-
-    // Add new task
-    document.querySelector('.create-task-btn').addEventListener('click', () => {
+    const inputTask = () => {
         const input = document.querySelector('.task-input'),
               task = {
                   text: input.value,
@@ -62,5 +53,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 .includes(task.text.toLowerCase())) { alert('Already in list'); return; };
 
         taskAdd(task, '.list');
+    };
+
+    // Check for 'tasks' in localStorage, if absent, add
+    if (!localStorage.getItem('tasks')) localStorage.setItem('tasks', '[]');
+
+    // Fill tasks list with tasks in localStorage when page load
+    JSON.parse(localStorage.tasks).forEach(task => {
+        taskAdd(task, '.list', false);
+    });
+    
+    // Add new task
+    document.querySelector('.create-task-btn').addEventListener('click', inputTask);
+
+    // Enter press
+    document.querySelector('.task-input').addEventListener('keydown', event => {
+        if (event.keyCode == '13') {
+            inputTask();
+        }
     });
 });
