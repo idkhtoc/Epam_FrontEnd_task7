@@ -29,6 +29,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                                     })));
         });
 
+        // Trash can on click, delete task from page and localStorage
         el.querySelector('.list__item-delete').addEventListener('click', () => {
             el.remove();
             localStorage.tasks = JSON.stringify(JSON.parse(localStorage.tasks)
