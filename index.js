@@ -1,6 +1,16 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // Tasks sort function
+    const tasksSort = () => {
+        JSON.parse(localStorage.tasks).sort((a, b) => {
+            const res = b.done - a.done;
+            return (res === 0) ? b.text.localeCompare(a.text) : res; 
+        }).forEach(task => taskAdd(task, '.list', false));
+    };
+    
     // Task add function
     const taskAdd = (task, parent, add = true) => {
+        const parentNode = document.querySelector(parent);
+        
         // Add task to localStorage
         if (add) localStorage.tasks = JSON.stringify([...JSON.parse(localStorage.tasks), task]);
 
@@ -17,7 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
             <img src="img/trash-can.svg" class="list__item-delete"/>
         `;
         
-        document.querySelector(parent).prepend(el);
+        parentNode.prepend(el);
 
         // Checkbox on click function that toggle active class and update indo in localStorage
         el.querySelector('.list__item-checkbox').addEventListener('change', () => {
@@ -27,6 +37,9 @@ document.addEventListener('DOMContentLoaded', () => {
                                                         text: elem.text,
                                                         done: (elem.text == task.text) ? !elem.done : elem.done
                                                     })));
+            
+            parentNode.innerHTML = '';
+            tasksSort();
         });
 
         // Trash can on click, delete task from page and localStorage
@@ -59,9 +72,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!localStorage.getItem('tasks')) localStorage.setItem('tasks', '[]');
 
     // Fill tasks list with tasks in localStorage when page load
-    JSON.parse(localStorage.tasks).forEach(task => {
-        taskAdd(task, '.list', false);
-    });
+    tasksSort();
     
     // Add new task
     document.querySelector('.create-task-btn').addEventListener('click', inputTask);
